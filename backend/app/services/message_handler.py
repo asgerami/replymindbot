@@ -46,6 +46,47 @@ async def process_telegram_update(owner_id: str, payload: dict):
             logger.error(f"Bot token missing for owner {owner_id}.")
             return
             
+        owner_tg_id = owner.get('telegram_id')
+        
+        # --- OWNER ROUTING ---
+        if owner_tg_id and str(tg_user.id) == str(owner_tg_id):
+            logger.info("Message is from the Business Owner.")
+            if update.message.reply_to_message and update.message.reply_to_message.text:
+                prev_text = update.message.reply_to_message.text
+                if "Customer TG ID:" in prev_text:
+                    import re
+                    match = re.search(r"Customer TG ID:\s*(\d+)", prev_text)
+                    if match:
+                        dest_tg_id = match.group(1)
+                        # Owner sending a reply back to customer
+                        await send_telegram_message(bot_token, dest_tg_id, msg_text)
+                        
+                        # Log it into the conversation
+                        cust_res = db.table('customers').select('id').eq('business_owner_id', owner_id).eq('telegram_id', dest_tg_id).execute()
+                        if cust_res.data:
+                            cust_db_id = cust_res.data[0]['id']
+                            conv_res = db.table('conversations').select('id').eq('customer_id', cust_db_id).eq('status', 'Open').execute()
+                            if conv_res.data:
+                                db.table('messages').insert({
+                                    'conversation_id': conv_res.data[0]['id'],
+                                    'sender_type': 'Owner',
+                                    'content': msg_text,
+                                    'status': 'Sent'
+                                }).execute()
+                                
+                        await send_telegram_message(bot_token, owner_tg_id, "✅ Reply successfully sent to customer.")
+                        return
+                    else:
+                        await send_telegram_message(bot_token, owner_tg_id, "⚠️ Could not parse Customer Telegram ID from the message you replied to.")
+                        return
+                else:
+                    await send_telegram_message(bot_token, owner_tg_id, "⚠️ Please reply to an official alert message containing a 'Customer TG ID'.")
+                    return
+            else:
+                await send_telegram_message(bot_token, owner_tg_id, "💡 You are recognized as the Business Owner. To reply to a customer, please use Telegram's 'Reply' feature on one of the alert messages.")
+                return
+        # --- END OWNER ROUTING ---
+            
         # 2. Memory Context Layer
         # Retrieve or initialize the Customer's Memory Profile
         customer_profile = await get_or_create_customer_profile(owner_id, tg_user)
@@ -143,7 +184,7 @@ async def process_telegram_update(owner_id: str, payload: dict):
             # Find owner's telegram ID if stored, and send them a message:
             owner_tg_id = owner.get('telegram_id') # Assuming this exists
             if owner_tg_id:
-                alert_text = f"🚨 Action Required: New complex message from {tg_user.first_name}.\n\nMessage: \"{msg_text}\"\n\nPlease check your dashboard or reply here."
+                alert_text = f"🚨 Action Required: New complex message from {tg_user.first_name}.\nCustomer TG ID: {tg_user.id}\n\nMessage: \"{msg_text}\"\n\n👉 Reply directly to this message to answer the customer."
                 await send_telegram_message(bot_token, owner_tg_id, alert_text)
                 
             db.table('analytics_events').insert({

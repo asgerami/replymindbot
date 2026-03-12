@@ -20,6 +20,7 @@ class TelegramMessage(BaseModel):
     chat: TelegramChat
     date: int
     text: Optional[str] = None
+    reply_to_message: Optional['TelegramMessage'] = None
 
 class TelegramWebhookPayload(BaseModel):
     update_id: int
