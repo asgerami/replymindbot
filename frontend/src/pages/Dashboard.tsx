@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth, supabase } from '../contexts/AuthContext';
-import { Settings, MessageSquare, Activity, Key, Loader2, Save } from 'lucide-react';
+import { Settings, MessageSquare, Activity, Key, Loader2, Save, Info } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -245,6 +245,57 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* How it Works Module */}
+      <div className="bg-white shadow sm:rounded-lg mb-8">
+        <div className="px-4 py-5 sm:p-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 flex items-center">
+            <Info className="w-5 h-5 mr-2 text-primary-500" />
+            How the Bot Works
+          </h3>
+          <div className="space-y-4 text-sm text-gray-600">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary-100 text-primary-600 font-bold">1</div>
+              </div>
+              <div className="ml-4">
+                <h4 className="text-lg font-bold text-gray-900">Your Customer Messages the Bot</h4>
+                <p className="mt-1">A customer asks a question on your Telegram bot. Our AI instantly analyzes the request using your business rules.</p>
+              </div>
+            </div>
+            
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-green-100 text-green-600 font-bold">2</div>
+              </div>
+              <div className="ml-4">
+                <h4 className="text-lg font-bold text-gray-900">High Confidence? Auto-Reply</h4>
+                <p className="mt-1">If the AI knows the answer (e.g., store hours, standard pricing), it replies to the customer instantly. You do nothing!</p>
+              </div>
+            </div>
+            
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-red-100 text-red-600 font-bold">3</div>
+              </div>
+              <div className="ml-4">
+                <h4 className="text-lg font-bold text-gray-900">Low Confidence? Human Handoff</h4>
+                <p className="mt-1">If the customer asks a complex question, the AI stays quiet. Instead, it sends an alert to <b>your personal Telegram account</b>.</p>
+              </div>
+            </div>
+            
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-purple-100 text-purple-600 font-bold">4</div>
+              </div>
+              <div className="ml-4">
+                <h4 className="text-lg font-bold text-gray-900">You Reply Directly</h4>
+                <p className="mt-1">You just use Telegram's built-in "Reply" feature directly on the alert message. The bot seamlessly takes your text and sends it back to the customer!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
