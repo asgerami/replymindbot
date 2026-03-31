@@ -87,7 +87,7 @@ async def get_recent_history(owner_id: str, telegram_user_id: int, limit: int = 
     formatted_history = []
     if history_res.data:
         for msg in reversed(history_res.data): # Reverse to chronological order
-            # Map DB sender_type to Anthropic roles
+            # Map DB sender_type to OpenAI chat roles
             sender = msg.get("sender_type")
             role = "user" if sender == "Customer" else "assistant"
             

@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str = ""
     
     # LLM Auth
-    ANTHROPIC_API_KEY: str = ""
+    OPENAI_KEY: str = ""
     
     # Redis for Celery Worker
     REDIS_URL: str = "redis://localhost:6379/0"

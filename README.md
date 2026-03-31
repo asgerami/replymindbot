@@ -1,6 +1,6 @@
 # ReplyMind: AI Customer Service for Telegram
 
-ReplyMind acts as the "brain" behind a business's official Telegram bot. It automates 80% of customer service inquiries using Anthropic's Claude 3 Models, while seamlessly handing off complex, edge-case questions back to the human business owners directly within Telegram.
+ReplyMind acts as the "brain" behind a business's official Telegram bot. It automates 80% of customer service inquiries using OpenAI's GPT models, while seamlessly handing off complex, edge-case questions back to the human business owners directly within Telegram.
 
 ## 🌟 How It Works (The Core Flow)
 
@@ -16,7 +16,7 @@ There are two primary users in the ReplyMind ecosystem:
 
 ### Phase 2: AI Auto-Responses (High Confidence)
 1. A **Customer** opens Telegram and messages the business bot (e.g., *"What time do you close today?"*).
-2. The ReplyMind Backend processes the message, retrieves the specific business rules for that owner, and asks the **Anthropic AI LLM** for a response.
+2. The ReplyMind Backend processes the message, retrieves the specific business rules for that owner, and asks the **OpenAI LLM** for a response.
 3. If the AI knows the answer based on the rules (generates a **high confidence score**), ReplyMind instantly responds to the customer. 
 4. *Result: The Customer receives immediate, accurate customer service.*
 
@@ -36,7 +36,7 @@ There are two primary users in the ReplyMind ecosystem:
 ## 🛠 Tech Stack
 - **Backend Framework:** FastAPI (Python)
 - **Database:** Supabase (PostgreSQL)
-- **AI / LLM:** Anthropic Claude 3
+- **AI / LLM:** OpenAI GPT-4o-mini
 - **Frontend / Dashboard:** React, Vite, TailwindCSS
 - **Hosting:** Render (Backend), Vercel/Netlify (Frontend)
 
@@ -50,7 +50,7 @@ Follow these steps to run the bot and the web dashboard on your local machine.
 - Python 3.12+ installed
 - Node.js v18+ installed
 - A Supabase account and project
-- An Anthropic API key
+- An OpenAI API key
 - A Telegram Bot Token from [@BotFather](https://t.me/BotFather)
 
 ### 2. Clone the Repository
@@ -71,7 +71,7 @@ Create a `.env` file in the `backend` directory:
 ```env
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_KEY=your_supabase_anon_key
-ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_KEY=your_openai_api_key
 ```
 
 Run the backend server:

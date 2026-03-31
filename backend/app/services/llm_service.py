@@ -1,4 +1,4 @@
-import anthropic
+from openai import AsyncOpenAI
 import json
 import logging
 from app.core.config import settings
@@ -12,11 +12,11 @@ class LLMService:
     @property
     def client(self):
         if not self._client:
-            api_key = settings.ANTHROPIC_API_KEY
+            api_key = settings.OPENAI_KEY
             if not api_key:
-                logger.warning("Anthropic API key is missing. Using dummy key for now.")
-                api_key = "sk-ant-dummy"
-            self._client = anthropic.AsyncAnthropic(api_key=api_key)
+                logger.warning("OpenAI API key is missing. Using dummy key for now.")
+                api_key = "sk-dummy"
+            self._client = AsyncOpenAI(api_key=api_key)
         return self._client
 
     async def generate_reply(self, owner_name: str, target_message: str, customer_profile: dict, history: list) -> dict:
@@ -42,15 +42,15 @@ class LLMService:
         """
         
         try:
-            response = await self.client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+            response = await self.client.chat.completions.create(
+                model="gpt-4o-mini",
                 max_tokens=500,
-                system=system_prompt,
                 messages=[
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
                 ]
             )
-            content = response.content[0].text
+            content = response.choices[0].message.content
             
             start_idx = content.find('{')
             end_idx = content.rfind('}') + 1
