@@ -113,6 +113,16 @@ export default function Dashboard() {
     }
   };
 
+  const backendBase = (import.meta.env.VITE_BACKEND_BASE_URL ?? "").replace(/\/+$/, "");
+  const webhookTarget =
+    ownerProfile && backendBase
+      ? `${backendBase}/webhook/telegram/${ownerProfile.id}`
+      : "";
+  const setWebhookHref =
+    webhookTarget && formData.telegram_bot_token
+      ? `https://api.telegram.org/bot${formData.telegram_bot_token}/setWebhook?url=${encodeURIComponent(webhookTarget)}`
+      : "";
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -234,14 +244,44 @@ export default function Dashboard() {
               Webhook Instructions
             </h3>
             <div className="text-sm text-primary-800 space-y-3">
-              <p>Your API is ready to receive messages. To activate it, click the link below to bind Telegram to your bot:</p>
-              
-              <div className="bg-white p-3 rounded-md border border-primary-200 overflow-x-auto">
-                <code className="text-xs break-all text-gray-800">
-                  https://api.telegram.org/bot{formData.telegram_bot_token}/setWebhook?url=https://YOUR_BACKEND_RENDER_URL/webhook/telegram/{ownerProfile.id}
+              <p>
+                To activate delivery, Telegram needs your webhook URL once per bot. Your backend path is{" "}
+                <code className="text-xs bg-white px-1 py-0.5 rounded border border-primary-200">
+                  /webhook/telegram/{ownerProfile.id}
                 </code>
-              </div>
-              <p className="text-xs text-primary-600 mt-1">Replace YOUR_BACKEND_RENDER_URL with your actual backend URL (e.g. replymindbot.onrender.com).</p>
+                .
+              </p>
+              {setWebhookHref ? (
+                <>
+                  <p>
+                    <a
+                      href={setWebhookHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-primary-700 underline hover:text-primary-900"
+                    >
+                      Register webhook with Telegram (opens new tab)
+                    </a>
+                  </p>
+                  <div className="bg-white p-3 rounded-md border border-primary-200 overflow-x-auto">
+                    <code className="text-xs break-all text-gray-800">{setWebhookHref}</code>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-amber-900 bg-amber-50 border border-amber-200 rounded-md p-3 text-xs">
+                    Set <code className="font-mono">VITE_BACKEND_BASE_URL</code> on Vercel to your public API
+                    origin (e.g. <code className="font-mono">https://replymindbot.onrender.com</code>), then
+                    redeploy the frontend. Until then, build the link manually:
+                  </p>
+                  <div className="bg-white p-3 rounded-md border border-primary-200 overflow-x-auto">
+                    <code className="text-xs break-all text-gray-800">
+                      https://api.telegram.org/bot{formData.telegram_bot_token}
+                      /setWebhook?url=https://YOUR_BACKEND_HOST/webhook/telegram/{ownerProfile.id}
+                    </code>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

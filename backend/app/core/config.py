@@ -8,8 +8,9 @@ class Settings(BaseSettings):
     SUPABASE_URL: str = ""
     SUPABASE_KEY: str = ""
     
-    # LLM Auth
+    # LLM Auth (OPENAI_API_KEY supported as a common alias on hosts like Render)
     OPENAI_KEY: str = ""
+    OPENAI_API_KEY: str = ""
     
     # Redis for Celery Worker
     REDIS_URL: str = "redis://localhost:6379/0"

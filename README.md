@@ -74,6 +74,8 @@ SUPABASE_KEY=your_supabase_anon_key
 OPENAI_KEY=your_openai_api_key
 ```
 
+You can use `OPENAI_API_KEY` instead of `OPENAI_KEY` if your host expects that name—the backend accepts either.
+
 Run the backend server:
 ```bash
 uvicorn app.main:app --reload
@@ -94,7 +96,10 @@ Create a `.env` file in the `frontend` directory:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_BACKEND_BASE_URL=https://your-render-service.onrender.com
 ```
+
+`VITE_BACKEND_BASE_URL` must be the **public origin only** (no trailing slash), e.g. `https://replymindbot.onrender.com`. The dashboard uses it to generate the Telegram `setWebhook` link.
 
 Run the frontend dashboard:
 ```bash

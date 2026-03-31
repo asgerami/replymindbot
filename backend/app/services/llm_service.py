@@ -12,7 +12,7 @@ class LLMService:
     @property
     def client(self):
         if not self._client:
-            api_key = settings.OPENAI_KEY
+            api_key = (settings.OPENAI_KEY or settings.OPENAI_API_KEY or "").strip()
             if not api_key:
                 logger.warning("OpenAI API key is missing. Using dummy key for now.")
                 api_key = "sk-dummy"
