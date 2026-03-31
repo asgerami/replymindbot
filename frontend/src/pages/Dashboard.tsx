@@ -32,12 +32,13 @@ export default function Dashboard() {
     try {
       // For MVP: Search by owner_name matching email prefix, or just get the first one they created.
       // Better way is to have an explicit claim or email column, but we will use the user's email as owner_name for new accounts
-      let { data, error } = await supabase
+      const { data, error } = await supabase
         .from('business_owners')
         .select('*')
         .eq('owner_name', user?.email)
         .single();
       
+      if (error) throw error;
       if (data) {
         setOwnerProfile(data);
         setFormData({
